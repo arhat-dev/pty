@@ -1,3 +1,3 @@
-module github.com/creack/pty
+module arhat.dev/pty
 
 go 1.13

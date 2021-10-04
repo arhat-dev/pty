@@ -26,7 +26,7 @@ type (
 	Pty interface {
 		// Fd intended to resize Tty of child process in current process
 		FdHolder
-
+		Name() string
 		// WriteString is only used to identify Pty and Tty
 		WriteString(s string) (n int, err error)
 		io.ReadWriteCloser
@@ -38,7 +38,7 @@ type (
 	Tty interface {
 		// Fd only intended for manual InheritSize from Pty
 		FdHolder
-
+		Name() string
 		io.ReadWriteCloser
 	}
 )

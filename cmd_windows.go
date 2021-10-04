@@ -21,7 +21,6 @@ import (
 //
 // A cmd cannot be reused after calling its Run, Output or CombinedOutput
 // methods.
-//go:linkname cmd os/exec.Cmd
 type cmd struct {
 	// Path is the path of the command to run.
 	//

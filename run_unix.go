@@ -1,5 +1,5 @@
 //go:build !windows
-//+build !windows
+// +build !windows
 
 package pty
 
@@ -7,21 +7,6 @@ import (
 	"os/exec"
 	"syscall"
 )
-
-// StartWithSize assigns a pseudo-terminal Tty to c.Stdin, c.Stdout,
-// and c.Stderr, calls c.Start, and returns the File of the tty's
-// corresponding Pty.
-//
-// This will resize the Pty to the specified size before starting the command.
-// Starts the process in a new session and sets the controlling terminal.
-func StartWithSize(c *exec.Cmd, sz *Winsize) (Pty, error) {
-	if c.SysProcAttr == nil {
-		c.SysProcAttr = &syscall.SysProcAttr{}
-	}
-	c.SysProcAttr.Setsid = true
-	c.SysProcAttr.Setctty = true
-	return StartWithAttrs(c, sz, c.SysProcAttr)
-}
 
 // StartWithAttrs assigns a pseudo-terminal Tty to c.Stdin, c.Stdout,
 // and c.Stderr, calls c.Start, and returns the File of the tty's
@@ -44,7 +29,7 @@ func StartWithAttrs(c *exec.Cmd, sz *Winsize, attrs *syscall.SysProcAttr) (Pty, 
 	}()
 
 	if sz != nil {
-		if err := Setsize(pty, sz); err != nil {
+		if err := Setsize(pty, *sz); err != nil {
 			_ = pty.Close()
 			return nil, err
 		}

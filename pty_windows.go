@@ -5,6 +5,7 @@ package pty
 
 import (
 	"os"
+	"strconv"
 	"syscall"
 	"unsafe"
 )
@@ -94,29 +95,13 @@ type WindowsPty struct {
 	consoleR, consoleW *os.File
 }
 
-func (p *WindowsPty) Fd() uintptr {
-	return p.handle
-}
-
-func (p *WindowsPty) Read(data []byte) (int, error) {
-	return p.r.Read(data)
-}
-
-func (p *WindowsPty) Write(data []byte) (int, error) {
-	return p.w.Write(data)
-}
-
-func (p *WindowsPty) WriteString(s string) (int, error) {
-	return p.w.WriteString(s)
-}
-
-func (p *WindowsPty) InputPipe() *os.File {
-	return p.w
-}
-
-func (p *WindowsPty) OutputPipe() *os.File {
-	return p.r
-}
+func (p *WindowsPty) Fd() uintptr                       { return p.handle }
+func (p *WindowsPty) Name() string                      { return strconv.FormatInt(int64(p.handle), 16) }
+func (p *WindowsPty) Read(data []byte) (int, error)     { return p.r.Read(data) }
+func (p *WindowsPty) Write(data []byte) (int, error)    { return p.w.Write(data) }
+func (p *WindowsPty) WriteString(s string) (int, error) { return p.w.WriteString(s) }
+func (p *WindowsPty) InputPipe() *os.File               { return p.w }
+func (p *WindowsPty) OutputPipe() *os.File              { return p.r }
 
 func (p *WindowsPty) Close() error {
 	_ = p.r.Close()
@@ -141,17 +126,10 @@ type WindowsTty struct {
 	r, w   *os.File
 }
 
-func (t *WindowsTty) Fd() uintptr {
-	return t.handle
-}
-
-func (t *WindowsTty) Read(p []byte) (int, error) {
-	return t.r.Read(p)
-}
-
-func (t *WindowsTty) Write(p []byte) (int, error) {
-	return t.w.Write(p)
-}
+func (t *WindowsTty) Fd() uintptr                 { return t.handle }
+func (p *WindowsTty) Name() string                { return strconv.FormatInt(int64(p.handle), 16) }
+func (t *WindowsTty) Read(p []byte) (int, error)  { return t.r.Read(p) }
+func (t *WindowsTty) Write(p []byte) (int, error) { return t.w.Write(p) }
 
 func (t *WindowsTty) Close() error {
 	_ = t.r.Close()

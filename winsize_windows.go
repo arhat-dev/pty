@@ -36,7 +36,7 @@ func (c windowsCoord) Pack() uintptr {
 }
 
 // Setsize resizes t to ws.
-func Setsize(t FdHolder, ws *Winsize) error {
+func Setsize(t FdHolder, ws Winsize) error {
 	err := resizePseudoConsole.Find()
 	if err != nil {
 		return err
@@ -55,20 +55,21 @@ func Setsize(t FdHolder, ws *Winsize) error {
 }
 
 // GetsizeFull returns the full terminal size description.
-func GetsizeFull(t FdHolder) (size *Winsize, err error) {
+func GetsizeFull(t FdHolder) (size Winsize, err error) {
 	err = getConsoleScreenBufferInfo.Find()
 	if err != nil {
-		return nil, err
+		return
 	}
 
 	var info windowsConsoleScreenBufferInfo
 	r1, _, err := getConsoleScreenBufferInfo.Call(t.Fd(), uintptr(unsafe.Pointer(&info)))
 	if r1 != 0 {
 		// S_OK: 0
-		return nil, os.NewSyscallError("GetConsoleScreenBufferInfo", err)
+		err = os.NewSyscallError("GetConsoleScreenBufferInfo", err)
+		return
 	}
 
-	return &Winsize{
+	return Winsize{
 		Rows: uint16(info.Window.Bottom - info.Window.Top + 1),
 		Cols: uint16(info.Window.Right - info.Window.Left + 1),
 	}, nil

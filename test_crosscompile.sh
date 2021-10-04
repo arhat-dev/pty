@@ -32,7 +32,7 @@ cross netbsd    amd64 386 arm arm64
 cross openbsd   amd64 386 arm arm64
 cross dragonfly amd64
 cross solaris   amd64
-cross windows   amd64 386 arm
+cross windows   amd64 386 arm arm64
 
 # TODO: Fix compilation error on openbsd/arm.
 # TODO: Merge the solaris PR.
@@ -40,7 +40,7 @@ cross windows   amd64 386 arm
 # Some os/arch require a different compiler. Run in docker.
 if ! hash docker; then
   # If docker is not present, stop here.
-  return
+  exit 0
 fi
 
 echo2 "Build for linux."
